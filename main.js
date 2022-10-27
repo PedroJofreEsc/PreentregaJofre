@@ -22,98 +22,67 @@ function Jugador(nombre, turno) {
 let X = new Jugador("X", true);
 let O = new Jugador("O", false);
 
+let jugador_activo= X
+
 
 //Selecionar elementos del html a modificar
 const cell = document.querySelectorAll(".cell")
 const estado = document.querySelector(".estado")
 const restart = document.querySelector(".restart")
-//
+//funciones del juego
 
 function iniciar_tictactoe() {
     game_on = true
     cell.forEach(cell => {
-        let i = 0
         cell.addEventListener("click", click_cell)
-        cell.setAttribute("numero", i)
-        i++
     })
+    restart.addEventListener("click", resetear)
     estado.innerText = `TURNO DE ${X.nombre} `
 }
 
 function click_cell() {
-    const numero_cell = this.getAttribute("numero");
-    alert(numero_cell)
+    
+    if (game_on){
+        const numero_cell = this.getAttribute("numero"); 
+        console.log(this.innerHtml)
+        //chequear si ya se uso el espcaio
+        if (this.innerText===""){
+            this.innerText=jugador_activo.nombre
+            cambiar_turno()
+            estado.innerText=`TURNO DE ${jugador_activo.nombre} `
+    }
+
+    }
+    
 
 }
 
-function escribir() {
-
-
-}
-
-function cambiar_turno(jugador) {
-    if (jugador.turno) {
-        jugador.turno = false;
+function cambiar_turno() {
+    if (jugador_activo.nombre==="X") {
+        jugador_activo= O;
     }
     else {
-        jugador.turno = false
+        jugador_activo= X
     }
 
 }
 
-function turno(jugador, juego) {
-    let reglas = confirm("quiere ver numero de casilas");
-    if (reglas) {
-        alert(juego.tablero_ori);
-    }
-    let elecion = prompt("seleciona el numero ")
-    while (casillas_ocupadas.includes(elecion) || elecion < 0 || elecion > 8) {
-        // alert("casillas ocupadas\n" + casillas_ocupadas)
-        // elecion = prompt("numero ocupado seleciona otro numero \n o numero incorrecto escoja entre 0 y 8 ")
-    }
-    casillas_ocupadas.push(elecion);
-    jugador.movimientos.push(elecion);
-    if (elecion <= 2) {
-        juego.tablero[0][elecion] = jugador.nombre;
-    }
-    else if (elecion <= 5) {
-        juego.tablero[1][elecion - 3] = jugador.nombre;
-    }
-    else {
-        juego.tablero[2][elecion - 6] = jugador.nombre;
-    }
-    //alert("tablero\n" + tablero[0] + "\n" + tablero[1] + "\n" + tablero[2] + "\n")
-}
+function chequear_combinacion() {
 
-function chequear_combinacion(jugador, combinacion_ganadora, game_on) {
-    for (let i = 0; i <= 7; i++) {
-        if (jugador.movimientos.includes(combinacion_ganadora[i][0].toString()) && jugador.movimientos.includes(combinacion_ganadora[i][1].toString()) && jugador.movimientos.includes(combinacion_ganadora[i][2].toString())) {
-            jugador.ganador = true;
-            //prompt(jugador.nombre + "gano");
-            game_on = false;
-            return game_on
-        }
-    };
-    return game_on
 }
 
 function chequear_ganador(jugador, juego, game_on) {
 
-    if (juego.casillas_ocupadas.length >= 5) {
-        chequear_combinacion(jugador, combinacion_ganadora, game_on);
-        if (jugador.ganador) {
-            //console.log(jugador.nombre + "gano")
-            game_on = false
-        }
 
-        if (juego.casillas_ocupadas.length === 9) {
-            game_on = false;
-            //  alert("nadie gano")
-        }
-        return game_on
-    }
-    return game_on
+}
 
+function resetear(){
+    cell.forEach(cell => {
+        cell.innerText=""
+    })
+    estado.innerText = `TURNO DE ${X.nombre} `
+    jugador_activo=X
+    game_on=true
 }
 
 iniciar_tictactoe()
