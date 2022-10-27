@@ -8,26 +8,29 @@
     <title>TIC TAC TOE</title>
     <link rel="stylesheet" href="../style.css">
 
-    <script src="../main.js"></script>
+
 </head>
 
 <body>
     <h1>TIC TAC TOE</h1>
 
     <div id="gameContainer" class="container">
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
-        <div class="cell"></div>
+        <div numero="0" class="cell"></div>
+        <div numero="1" class="cell"></div>
+        <div numero="2" class="cell"></div>
+        <div numero="3" class="cell"></div>
+        <div numero="4" class="cell"></div>
+        <div numero="5" class="cell"></div>
+        <div numero="6" class="cell"></div>
+        <div numero="7" class="cell"></div>
+        <div numero="8" class="cell"></div>
     </div>
 
-    <button id="restart">Restart</button>
+    <h2 class="estado">Jugador turno</h2>
+
+    <button id="restart" onclick="resetear()">iniciar partida</button>
 
 </body>
+<script src="../main.js" defer></script>
 
 </html>

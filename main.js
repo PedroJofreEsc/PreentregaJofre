@@ -1,12 +1,8 @@
 
+//json guardar estado del juego en reset
 
-let game_on = confirm("Quieres jugar tic tac toe");
-
-let tablero = [[0, 1, 2], [3, 4, 5], [6, 7, 8]];
-
-let tablero_ori = [0, 1, 2] + "\n" + [3, 4, 5] + "\n" + [6, 7, 8];
-let casillas_ocupadas = [];
-
+let game_on = false;
+let casillas_ocupadas = ["", "", "", "", "", "", "", "", ""];
 const combinacion_ganadora = [[0, 1, 2],
 [3, 4, 5],
 [6, 7, 8],
@@ -18,17 +14,41 @@ const combinacion_ganadora = [[0, 1, 2],
 ];
 
 
-function zona_juego(tablero, tablero_ori, casillas_ocupadas) {
-    this.tablero = tablero;
-    this.tablero_ori = tablero_ori;
-    this.casillas_ocupadas = casillas_ocupadas;
-}
-
 function Jugador(nombre, turno) {
     this.nombre = nombre;
     this.turno = turno;
-    this.ganador = false;
-    this.movimientos = []
+}
+
+let X = new Jugador("X", true);
+let O = new Jugador("O", false);
+
+
+//Selecionar elementos del html a modificar
+const cell = document.querySelectorAll(".cell")
+const estado = document.querySelector(".estado")
+const restart = document.querySelector(".restart")
+//
+
+function iniciar_tictactoe() {
+    game_on = true
+    cell.forEach(cell => {
+        let i = 0
+        cell.addEventListener("click", click_cell)
+        cell.setAttribute("numero", i)
+        i++
+    })
+    estado.innerText = `TURNO DE ${X.nombre} `
+}
+
+function click_cell() {
+    const numero_cell = this.getAttribute("numero");
+    alert(numero_cell)
+
+}
+
+function escribir() {
+
+
 }
 
 function cambiar_turno(jugador) {
@@ -48,8 +68,8 @@ function turno(jugador, juego) {
     }
     let elecion = prompt("seleciona el numero ")
     while (casillas_ocupadas.includes(elecion) || elecion < 0 || elecion > 8) {
-        alert("casillas ocupadas\n" + casillas_ocupadas)
-        elecion = prompt("numero ocupado seleciona otro numero \n o numero incorrecto escoja entre 0 y 8 ")
+        // alert("casillas ocupadas\n" + casillas_ocupadas)
+        // elecion = prompt("numero ocupado seleciona otro numero \n o numero incorrecto escoja entre 0 y 8 ")
     }
     casillas_ocupadas.push(elecion);
     jugador.movimientos.push(elecion);
@@ -62,14 +82,14 @@ function turno(jugador, juego) {
     else {
         juego.tablero[2][elecion - 6] = jugador.nombre;
     }
-    alert("tablero\n" + tablero[0] + "\n" + tablero[1] + "\n" + tablero[2] + "\n")
+    //alert("tablero\n" + tablero[0] + "\n" + tablero[1] + "\n" + tablero[2] + "\n")
 }
 
 function chequear_combinacion(jugador, combinacion_ganadora, game_on) {
     for (let i = 0; i <= 7; i++) {
         if (jugador.movimientos.includes(combinacion_ganadora[i][0].toString()) && jugador.movimientos.includes(combinacion_ganadora[i][1].toString()) && jugador.movimientos.includes(combinacion_ganadora[i][2].toString())) {
             jugador.ganador = true;
-            prompt(jugador.nombre + "gano");
+            //prompt(jugador.nombre + "gano");
             game_on = false;
             return game_on
         }
@@ -82,13 +102,13 @@ function chequear_ganador(jugador, juego, game_on) {
     if (juego.casillas_ocupadas.length >= 5) {
         chequear_combinacion(jugador, combinacion_ganadora, game_on);
         if (jugador.ganador) {
-            console.log(jugador.nombre + "gano")
+            //console.log(jugador.nombre + "gano")
             game_on = false
         }
 
         if (juego.casillas_ocupadas.length === 9) {
             game_on = false;
-            alert("nadie gano")
+            //  alert("nadie gano")
         }
         return game_on
     }
@@ -96,20 +116,4 @@ function chequear_ganador(jugador, juego, game_on) {
 
 }
 
-let P1 = new Jugador("P1", true);
-let CPU = new Jugador("CPU", false);
-let juego = new zona_juego(tablero, tablero_ori, casillas_ocupadas)
-
-while (game_on) {
-    debugger
-    alert("jugador uno tu turno")
-    turno(P1, juego);
-    game_on = chequear_ganador(P1, juego, game_on);
-
-    if (!game_on) {
-        break
-    }
-    alert("jugador 2 tu turno")
-    turno(CPU, juego)
-    game_on = chequear_ganador(CPU, juego, game_on)
-}
+iniciar_tictactoe()
