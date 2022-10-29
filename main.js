@@ -1,28 +1,65 @@
 
-//json guardar estado del juego en reset
-
+document.addEventListener("DOMContentLoaded", recuperar_datos)
+//indicador de si el juego esta activo
 let game_on = false;
-let casillas_ocupadas = ["", "", "", "", "", "", "", "", ""];
-const combinacion_ganadora = [[0, 1, 2],
-[3, 4, 5],
-[6, 7, 8],
-[0, 3, 6],
-[1, 4, 7],
-[2, 5, 8],
-[0, 4, 8],
-[2, 4, 6]
-];
 
-
-function Jugador(nombre, turno) {
+function Jugador(nombre, turno, victorias) {
     this.nombre = nombre;
     this.turno = turno;
+    this.contador = victorias;
 }
 
-let X = new Jugador("X", true);
-let O = new Jugador("O", false);
+let X = new Jugador("X", true, contadorx);
+let O = new Jugador("O", false, contadoro);
+let jugador_activo = X
 
-let jugador_activo= X
+
+
+
+//funciones del juego
+
+function iniciar_tictactoe() {
+    //actualizar valores desde localstore
+    X.contador = contadorx;
+    O.contador = contadoro;
+
+
+
+    cell.forEach(cell => {
+        cell.addEventListener("click", click_cell)
+    });
+    restart.addEventListener("click", resetear);
+    estado.innerText = `TURNO DE ${X.nombre} `
+    restart.innerText = "iniciar partida "
+
+
+}
+
+
+function resetear() {
+    cell.forEach(cell => {
+        cell.innerText = ""
+    })
+    estado.innerText = `TURNO DE ${X.nombre} `
+    jugador_activo = X
+    game_on = true
+    casillas_ocupadas = ["", "", "", "", "", "", "", "", ""];
+    restart.innerText = "reset"
+}
+
+
+function click_cell() {
+
+    const numero_cell = this.getAttribute("numero");
+
+    //chequear si ya se uso el espcaio
+    if (!casillas_ocupadas[numero_cell] == "" || !game_on) {
+        return
+    }
+    this.innerText = jugador_activo.nombre
+    casillas_ocupadas[numero_cell] = jugador_activo.nombre
+    chequear_ganador()
+
 
 
 //Selecionar elementos del html a modificar
@@ -40,49 +77,69 @@ function iniciar_tictactoe() {
     estado.innerText = `TURNO DE ${X.nombre} `
 }
 
-function click_cell() {
-    
-    if (game_on){
-        const numero_cell = this.getAttribute("numero"); 
-        console.log(this.innerHtml)
-        //chequear si ya se uso el espcaio
-        if (this.innerText===""){
-            this.innerText=jugador_activo.nombre
-            cambiar_turno()
-            estado.innerText=`TURNO DE ${jugador_activo.nombre} `
-    }
-
-    }
-    
-
-}
 
 function cambiar_turno() {
-    if (jugador_activo.nombre==="X") {
-        jugador_activo= O;
+    if (jugador_activo.nombre === "X") {
+        jugador_activo = O;
     }
     else {
-        jugador_activo= X
+        jugador_activo = X
+    }
+    estado.innerText = `TURNO DE ${jugador_activo.nombre} `
+
+
+}
+
+
+
+function chequear_ganador() {
+    let existe_ganador = false;
+
+    for (let i = 0; i < combinacion_ganadora.length; i++) {
+        const casilla1 = casillas_ocupadas[combinacion_ganadora[i][0]];
+        const casilla2 = casillas_ocupadas[combinacion_ganadora[i][1]];
+        const casilla3 = casillas_ocupadas[combinacion_ganadora[i][2]];
+        if (casilla1 == "" || casilla2 == "" || casilla3 == "") {
+            //si existe una celda vacia pasar siguiente combinacion
+            continue
+        }
+        if (casilla1 == casilla2 && casilla2 == casilla3) {
+            existe_ganador = true;
+            break
+        }
+
+    }
+    if (existe_ganador) {
+        game_on = false;
+        estado.innerText = ` ${jugador_activo.nombre} GANO `;
+        jugador_activo.contador += 1;
+        actualizar_tabla_posiciones();
+        almacenar_datos()
+    }
+    else if (!casillas_ocupadas.includes("")) {
+        game_on = false;
+        estado.innerText = ` EMPATE `;
+        actualizar_tabla_posiciones();
+        empate += 1;
+        almacenar_datos()
+    }
+    //s no se cumple condiciones de termino cambiar jugador
+    else {
+        cambiar_turno()
     }
 
-}
 
-function chequear_combinacion() {
-
-}
-
-function chequear_ganador(jugador, juego, game_on) {
 
 
 }
 
-function resetear(){
-    cell.forEach(cell => {
-        cell.innerText=""
-    })
-    estado.innerText = `TURNO DE ${X.nombre} `
-    jugador_activo=X
-    game_on=true
+function actualizar_tabla_posiciones() {
+    marcadorx.innerText = "X" + X.contador;
+    marcadoro.innerText = "O" + O.contador;
+
 }
 
 iniciar_tictactoe()
+
+actualizar_tabla_posiciones()
+
