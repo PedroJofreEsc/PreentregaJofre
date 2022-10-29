@@ -60,7 +60,23 @@ function click_cell() {
     casillas_ocupadas[numero_cell] = jugador_activo.nombre
     chequear_ganador()
 
+
+
+//Selecionar elementos del html a modificar
+const cell = document.querySelectorAll(".cell")
+const estado = document.querySelector(".estado")
+const restart = document.querySelector(".restart")
+//funciones del juego
+
+function iniciar_tictactoe() {
+    game_on = true
+    cell.forEach(cell => {
+        cell.addEventListener("click", click_cell)
+    })
+    restart.addEventListener("click", resetear)
+    estado.innerText = `TURNO DE ${X.nombre} `
 }
+
 
 function cambiar_turno() {
     if (jugador_activo.nombre === "X") {
@@ -71,7 +87,9 @@ function cambiar_turno() {
     }
     estado.innerText = `TURNO DE ${jugador_activo.nombre} `
 
+
 }
+
 
 
 function chequear_ganador() {
@@ -111,6 +129,8 @@ function chequear_ganador() {
     }
 
 
+
+
 }
 
 function actualizar_tabla_posiciones() {
@@ -122,3 +142,4 @@ function actualizar_tabla_posiciones() {
 iniciar_tictactoe()
 
 actualizar_tabla_posiciones()
+
