@@ -18,21 +18,28 @@ let jugador_activo = X
 //funciones del juego
 
 function iniciar_tictactoe() {
-    //actualizar valores desde localstore
-    X.contador = contadorx;
-    O.contador = contadoro;
-
-
 
     cell.forEach(cell => {
         cell.addEventListener("click", click_cell)
     });
-    restart.addEventListener("click", resetear);
-    estado.innerText = `TURNO DE ${X.nombre} `
+    restart.addEventListener("click", cargar_data);
+    estado.innerText = `INICIE PARTIDA `
     restart.innerText = "iniciar partida "
-
-
 }
+
+function cargar_data() {
+    X.contador = contadorx;
+    O.contador = contadoro;
+    estado.innerText = `TURNO DE ${X.nombre} `
+    restart.removeEventListener("click", cargar_data)
+    restart.addEventListener("click", resetear);
+    jugador_activo = X
+    game_on = true
+    casillas_ocupadas = ["", "", "", "", "", "", "", "", ""];
+    restart.innerText = "reset"
+    actualizar_tabla_posiciones()
+}
+
 
 
 function resetear() {
