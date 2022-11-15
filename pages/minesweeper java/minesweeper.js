@@ -1,5 +1,7 @@
 //usar luxon para manejar tiempos, fechas y duraciones 
 //preparar juego
+
+
 function celda(x, y) {
     this.mina = false;
     this.numero = 0;
@@ -47,27 +49,36 @@ function poner_bombas() {
         }
         tablero[x][y].mina = true
         tablero[x][y].elemento.dataset.mina = 'true';
-        console.log(x, y)
     }
 }
 
-function poner_numeros(tablero) {
-    for (i = 0; i++; i < ancho) {
-        for (j = 0; j++; j < alto) {
-            if (!tablero[x][y].mina) {
-                tablero[x][y].numero = minas_alrededor(tablero, x, y)
+function poner_numeros() {
+
+    for (let i = 0; i < ancho; i++) {
+        console.log(i)
+        for (let j = 0; j < alto; j++) {
+            if (!tablero[i][j].mina) {
+                tablero[i][j].elemento.dataset.numero = minas_alrededor(i, j)
 
             }
         }
     }
 }
 
-function minas_alrededor(tablero, x, y) {
-    let total_minas = 0
-    if (x = 0) {
-        let i = 1
-    }
+function minas_alrededor(x, y) {
 
+    let total_minas = 0
+    //casos borde
+    let i = x == 0 ? [0, 1] : x == ancho - 1 ? [-1, 0] : [-1, 0, 1]
+    let j = y == 0 ? [0, 1] : y == alto - 1 ? [-1, 0] : [-1, 0, 1]
+    i.forEach(fila => {
+        j.forEach(columna => {
+            if (tablero[x + fila][y + columna].mina) {
+                total_minas++;
+            }
+        })
+    })
+    return total_minas;
 }
 
 function iniciar_minesweeper() {
@@ -90,7 +101,10 @@ function iniciar_minesweeper() {
         })
     })
     informacion.innerText = `Minas Restantes = ${numero_minas} `
+
     poner_bombas();
+
+    poner_numeros();
 
 }
 
@@ -104,14 +118,14 @@ function cargar_botones() {
 function nivel_facil() {
     ancho = 4;
     alto = 5;
-    numero_minas = 6;
+    numero_minas = 4;
     iniciar_minesweeper();
 }
 
 function nivel_medio() {
     ancho = 6;
     alto = 8;
-    numero_minas = 15;
+    numero_minas = 10;
     iniciar_minesweeper();
 }
 function nivel_dificil() {
@@ -134,14 +148,21 @@ function reset() {
 function revelar_celda() {
 
     if (game_on && this.dataset.mina === 'true') {
-        prompt("perdiste")
+        Swal.fire({
+            title: 'PERDISTE!',
+            text: 'Escoga dificultad',
+            icon: 'error',
+            confirmButtonText: 'ok'
+        })
         game_on = false
+        num_derrotas++
+        derrotas.innerHTML = `perdidas = ${num_derrotas} `
+        almacenar_datos()
     }
 
-    if (game_on && this.dataset.mina === 'false' && this.dataset.revelado === 'false' && this.dataset.bandera === 'false') {
-        this.innerText = "X"
+    if (game_on && this.dataset.mina === 'false' && this.dataset.mina === 'false' && this.dataset.revelado === 'false' && this.dataset.bandera === 'false') {
+        this.innerText = this.dataset.numero
         this.dataset.revelado = 'true'
-
     }
 }
 
