@@ -1,0 +1,6 @@
+let juego = document.querySelector(".juego")
+let facil = document.querySelector(".facil")
+let medio = document.querySelector(".medio")
+let dificil = document.querySelector(".dificil")
+let informacion = document.querySelector(".informacion")
+let jugador = document.querySelector(".jugador")
